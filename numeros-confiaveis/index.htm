@@ -264,43 +264,47 @@ document.addEventListener("DOMContentLoaded", function () {
         // Se o número tiver mais de 11 dígitos, retorna vazio (ou pode ajustar para outro comportamento)
         return '';
     }
-// Lista de números oficiais no formato E.164
+    // Lista de números oficiais (limpos, sem +55, espaço ou traço)
     const numerosOficiais = [
-        '+558699881441',
-        '+5586999881441',
-        '+558699648107',
-        '+5586999648107',
-	'+554391382419',
-        '+5543991382419',
-        '+551694131604',
-        '+5516994131604',
-	'+558296667813',
-	'+5582996667813',
-	'+556294096280',
-	'+5562994096280'
-
-        // Adicione mais aqui
+        '8699881441',
+        '86999881441',
+        '8699648107',
+        '86999648107',
+	'4391382419',
+        '43991382419',
+        '1694131604',
+        '16994131604',
+	'8296667813',
+	'82996667813',
+	'6294096280',
+	'62994096280'
+        // Adicione mais números sem formatação
     ];
 
-    // Reutilizando a variável já existente phoneInputField
-    function formatPhoneNumber(phone) {
-        const cleanPhone = phone.replace(/\D/g, '');
-        if (cleanPhone.length > 0 && cleanPhone.length <= 11) {
-            return `+55${cleanPhone}`;
-        }
-        return '';
+    // Seleciona os inputs de telefone (já declarada antes)
+    // phoneInputField já existe no seu script original
+
+    // Função para limpar o número de entrada
+    function limparNumero(phone) {
+        // Remove tudo que não for dígito
+        return phone.replace(/\D/g, '');
     }
 
     $("form").submit(function(e) {
-        e.preventDefault(); // Impede o envio padrão do formulário
+        e.preventDefault(); // Impede envio padrão
 
         let numero = '';
         phoneInputField.forEach((input) => {
             const phoneValue = input.value.trim();
-            numero = formatPhoneNumber(phoneValue);
+            numero = limparNumero(phoneValue);
         });
 
-        // Verifica se o número está na lista oficial
+        // Remove prefixo 55, se presente
+        if (numero.startsWith('55')) {
+            numero = numero.substring(2);
+        }
+
+        // Verifica se o número está na lista
         if (numerosOficiais.includes(numero)) {
             alert('✅ Este número é oficial e faz parte da equipe.');
         } else {
